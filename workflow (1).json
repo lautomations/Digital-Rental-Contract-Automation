@@ -1,0 +1,1173 @@
+{
+  "name": "Contract",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "YOUR_TALLY_FORM_ID"
+      },
+      "type": "n8n-nodes-tallyforms.tallyTrigger",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        112
+      ],
+      "id": "79056ab1-0b11-4906-9de7-60b8c927e408",
+      "name": "Tally Trigger",
+      "webhookId": "c08b6b8e-cbfe-4647-9693-80219ef48915",
+      "credentials": {
+        "tallyApi": {
+          "id": "YOUR_TALLY_CREDENTIAL_ID",
+          "name": "jaleamanovic"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Tally Trigger').item.json.question_RMOp4v.value }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "Front Document"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1376,
+        0
+      ],
+      "id": "0e347bd8-cc0d-4792-b752-18c7fc15779e",
+      "name": "Front Doc"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Tally Trigger').item.json.question_0BXJ99.value }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "Back Document"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1584,
+        0
+      ],
+      "id": "79c35f2e-ec7b-4c87-8e7c-7dffaf139545",
+      "name": "Back Doc"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Tally Trigger').item.json.question_VQrAzg.value }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "Signature"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        320,
+        0
+      ],
+      "id": "572acea7-4ee0-43d3-ab08-fc8158726d13",
+      "name": "Signature"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "YOUR_TEMPLATE_DOC_ID",
+          "mode": "id"
+        },
+        "name": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }} contract",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "YOUR_CONTRACTS_FOLDER_ID",
+          "mode": "list",
+          "cachedResultName": "Contracts SunCoast n8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_CONTRACTS_FOLDER_ID"
+        },
+        "options": {
+          "copyRequiresWriterPermission": true
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        752,
+        0
+      ],
+      "id": "a77b86ea-3d6d-4ebb-8b73-e62fc4a52e1c",
+      "name": "Copy file",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "example-client"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "{{name}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{country}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_99ebE4.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{document_number}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_BdNQrR.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{now_hora}}",
+              "replaceText": "={{ $now.format('HH') }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{now_dia}}",
+              "replaceText": "={{ $now.format('dd') }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{now_ano}}",
+              "replaceText": "={{ $now.format('yyyy') }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{tiempo}} ",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_A2kZxl.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{now_mes}}",
+              "replaceText": "={{ $now.format('LLLL') }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{numero_de_clientes}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_darQ7q.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{matricula}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_2a0JM9.value == \"Azul\" ? \"XX 000-0-00\" : $('Tally Trigger').item.json.question_2a0JM9.value == \"Blanco\" ? \"XX 000-0-00\" : $('Tally Trigger').item.json.question_2a0JM9.value == \"Rosado\" ? \"XX 000-0-00\" : $('Tally Trigger').item.json.question_2a0JM9.value == \"Blanco y Azul\" ? \"XX 000-0-00\" : \"Valor no encontrado\" }}",
+              "matchCase": true
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        976,
+        0
+      ],
+      "id": "8c6de34b-fb58-409d-b6d6-6be6ceba992a",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "YOUR_GOOGLE_DOCS_CREDENTIAL_ID",
+          "name": "example-client"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Copy file').item.json.id }}:batchUpdate",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"replaceImage\": {\n        \"imageObjectId\": \"kix.tgjm6stnevyb\",\n        \"uri\": \"{{ $('upload signature').item.json.webContentLink }}\",\n        \"imageReplaceMethod\": \"CENTER_CROP\"\n      }\n    },\n    {\n      \"replaceImage\": {\n        \"imageObjectId\": \"kix.2grslrprz61q\", \n        \"uri\": \"{{ $('upload signature').item.json.webContentLink }}\",\n        \"imageReplaceMethod\": \"CENTER_CROP\",\n        \"tabId\": \"t.e4w0wcvfqdrj\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "1edd3872-d959-4970-b2f6-f7d32ebd941e",
+      "name": "add signature",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_GOOGLE_OAUTH_CREDENTIAL_ID",
+          "name": "example-client google conenction"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "Signature",
+        "name": "=/Clients ID-s/Signature {{ $('Tally Trigger').item.json.question_oeJWB5.value }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "YOUR_CLIENT_IDS_FOLDER_ID",
+          "mode": "list",
+          "cachedResultName": "Client ID-s",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_CLIENT_IDS_FOLDER_ID"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        528,
+        0
+      ],
+      "id": "69e6047d-bd58-4b6d-8cdb-fd1561967bd1",
+      "name": "upload signature",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "example-client"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "owner@example.com",
+        "subject": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }} Contract",
+        "emailType": "text",
+        "message": "=https://docs.google.com/document/d/{{ $('Copy file').item.json.id }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "Front Document"
+              },
+              {
+                "property": "Back Document"
+              }
+            ]
+          },
+          "senderName": "SunCoast Boats"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ],
+      "id": "e95ab7b5-eb61-4201-8fc3-8c44021e2391",
+      "name": "to luigi",
+      "webhookId": "aaa78d66-0c52-496e-8dcf-0391daea481d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "example-automations.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Tally Trigger').item.json.question_4J5N7b.value }}",
+        "subject": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }} Boat Contract 🚤",
+        "message": "=Hi {{ $('Tally Trigger').item.json.question_oeJWB5.value.split(' ')[0] }}, here is your boat renting contract:<br>\nhttps://docs.google.com/document/d/{{ $('Copy file').item.json.id }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "SunCoast Boats"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1968,
+        0
+      ],
+      "id": "63e91264-f464-482b-be87-a488cb3019bf",
+      "name": "to client",
+      "webhookId": "aaa78d66-0c52-496e-8dcf-0391daea481d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "example-automations.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "84ed11fc-12f2-4a91-a9ff-35682186b192",
+              "leftValue": "={{ $json.question_0BXJ99.value }}",
+              "rightValue": "https://",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        96,
+        112
+      ],
+      "id": "a8be75a9-7df1-4fa3-ba68-ea1f086d9c39",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_CRM_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "CRM Contracts SunCoast",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_CRM_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_CRM_SHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now.format('yyyy-MM-dd HH:mm') }}",
+            "Client Name": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }}",
+            "Client Email": "={{ $('Tally Trigger').item.json.question_4J5N7b.value }}",
+            "Phone number": "={{ $('Tally Trigger').item.json.question_NoXBrG.value }}",
+            "Number of Clients": "={{ $('Tally Trigger').item.json.question_darQ7q.value }}",
+            "End time": "={{ $('Tally Trigger').item.json.question_A2kZxl.value.includes(2) ? $now.plus({hours: 2}).toFormat('yyyy-MM-dd HH:mm') : $now.plus({hours: 1}).toFormat('yyyy-MM-dd HH:mm') }}",
+            "Client Contract": "=https://docs.google.com/document/d/{{ $('Copy file').item.json.id }}",
+            "Boat color": "={{ $('Tally Trigger').item.json.question_2a0JM9.value }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Email",
+              "displayName": "Client Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Contract",
+              "displayName": "Client Contract",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone number",
+              "displayName": "Phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Number of Clients",
+              "displayName": "Number of Clients",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "End time",
+              "displayName": "End time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Boat color",
+              "displayName": "Boat color",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Message sent",
+              "displayName": "Message sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2176,
+        0
+      ],
+      "id": "31093611-d679-4210-9fdc-e2596694b280",
+      "name": "Append row in sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "example-client"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Tally Trigger').item.json.question_RMOp4v.value }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "Front Document"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1360,
+        240
+      ],
+      "id": "23f7a101-3ee5-44cb-a727-3ac694cfdfc8",
+      "name": "Front Doc1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Tally Trigger').item.json.question_VQrAzg.value }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "Signature"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        304,
+        240
+      ],
+      "id": "45afeb3b-3766-4069-92c9-05c519ef92c7",
+      "name": "Signature1"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "YOUR_TEMPLATE_DOC_ID",
+          "mode": "id"
+        },
+        "name": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }} contract",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "YOUR_CONTRACTS_FOLDER_ID",
+          "mode": "list",
+          "cachedResultName": "Contracts SunCoast n8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_CONTRACTS_FOLDER_ID"
+        },
+        "options": {
+          "copyRequiresWriterPermission": true
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        736,
+        240
+      ],
+      "id": "7dce96cd-792a-4954-8c3e-3a20611fd472",
+      "name": "Copy file1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "example-client"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "{{name}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{country}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_99ebE4.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{document_number}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_BdNQrR.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{now_hora}}",
+              "replaceText": "={{ $now.format('HH') }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{now_dia}}",
+              "replaceText": "={{ $now.format('dd') }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{now_ano}}",
+              "replaceText": "={{ $now.format('yyyy') }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{tiempo}} ",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_A2kZxl.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{now_mes}}",
+              "replaceText": "={{ $now.format('LLLL') }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{numero_de_clientes}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_darQ7q.value }}",
+              "matchCase": true
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{matricula}}",
+              "replaceText": "={{ $('Tally Trigger').item.json.question_2a0JM9.value == \"Azul\" ? \"XX 000-0-00\" : $('Tally Trigger').item.json.question_2a0JM9.value == \"Blanco\" ? \"XX 000-0-00\" : $('Tally Trigger').item.json.question_2a0JM9.value == \"Rosado\" ? \"XX 000-0-00\" : $('Tally Trigger').item.json.question_2a0JM9.value == \"Blanco y Azul\" ? \"XX 000-0-00\" : \"Valor no encontrado\" }}",
+              "matchCase": true
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        960,
+        240
+      ],
+      "id": "e486c0dd-f81d-4a9a-bed7-7bd1845a1039",
+      "name": "Update a document1",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "YOUR_GOOGLE_DOCS_CREDENTIAL_ID",
+          "name": "example-client"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Copy file1').item.json.id }}:batchUpdate",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"replaceImage\": {\n        \"imageObjectId\": \"kix.tgjm6stnevyb\",\n        \"uri\": \"{{ $('upload signature1').item.json.webContentLink }}\",\n        \"imageReplaceMethod\": \"CENTER_CROP\"\n      }\n    },\n    {\n      \"replaceImage\": {\n        \"imageObjectId\": \"kix.2grslrprz61q\", \n        \"uri\": \"{{ $('upload signature1').item.json.webContentLink }}\",\n        \"imageReplaceMethod\": \"CENTER_CROP\",\n        \"tabId\": \"t.e4w0wcvfqdrj\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1168,
+        240
+      ],
+      "id": "ee41ab1f-a260-47f8-94a9-d34e99a14a19",
+      "name": "add signature1",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_GOOGLE_OAUTH_CREDENTIAL_ID",
+          "name": "example-client google conenction"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "Signature",
+        "name": "=/Clients ID-s/Signature {{ $('Tally Trigger').item.json.question_oeJWB5.value }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "YOUR_CLIENT_IDS_FOLDER_ID",
+          "mode": "list",
+          "cachedResultName": "Client ID-s",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_CLIENT_IDS_FOLDER_ID"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        512,
+        240
+      ],
+      "id": "16059d26-969f-4a35-926d-275ed46a6fa0",
+      "name": "upload signature1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "example-client"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "owner@example.com",
+        "subject": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }} Contract",
+        "emailType": "text",
+        "message": "=https://docs.google.com/document/d/{{ $('Copy file1').item.json.id }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "Front Document"
+              }
+            ]
+          },
+          "senderName": "SunCoast Boats"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1552,
+        240
+      ],
+      "id": "3e3b229e-a9c8-4a37-b002-0845f47c5f7f",
+      "name": "to luigi1",
+      "webhookId": "aaa78d66-0c52-496e-8dcf-0391daea481d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "example-automations.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Tally Trigger').item.json.question_4J5N7b.value }}",
+        "subject": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }} Boat Contract 🚤",
+        "message": "=Hi {{ $('Tally Trigger').item.json.question_oeJWB5.value.split(' ')[0] }}, here is your boat renting contract:<br>\nhttps://docs.google.com/document/d/{{ $('Copy file1').item.json.id }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "SunCoast Boats"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1728,
+        240
+      ],
+      "id": "59100dfb-7f6a-437d-abe7-60f9ee3adf35",
+      "name": "to client1",
+      "webhookId": "aaa78d66-0c52-496e-8dcf-0391daea481d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "example-automations.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_CRM_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "CRM Contracts SunCoast",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_CRM_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_CRM_SHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now.format('yyyy-MM-dd HH:mm') }}",
+            "Client Name": "={{ $('Tally Trigger').item.json.question_oeJWB5.value }}",
+            "Client Email": "={{ $('Tally Trigger').item.json.question_4J5N7b.value }}",
+            "Phone number": "={{ $('Tally Trigger').item.json.question_NoXBrG.value }}",
+            "Number of Clients": "={{ $('Tally Trigger').item.json.question_darQ7q.value }}",
+            "End time": "={{ $('Tally Trigger').item.json.question_A2kZxl.value.includes(2) ? $now.plus({hours: 2}).toFormat('yyyy-MM-dd HH:mm') : $now.plus({hours: 1}).toFormat('yyyy-MM-dd HH:mm') }}",
+            "Client Contract": "=https://docs.google.com/document/d/{{ $('Copy file1').item.json.id }}",
+            "Boat color": "={{ $('Tally Trigger').item.json.question_2a0JM9.value }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Email",
+              "displayName": "Client Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Contract",
+              "displayName": "Client Contract",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone number",
+              "displayName": "Phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Number of Clients",
+              "displayName": "Number of Clients",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "End time",
+              "displayName": "End time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Boat color",
+              "displayName": "Boat color",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Message sent",
+              "displayName": "Message sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1936,
+        240
+      ],
+      "id": "912b8ad2-036c-4fc2-8327-57f3a170ab56",
+      "name": "Append row in sheet1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "example-client"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Tally Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Front Doc": {
+      "main": [
+        [
+          {
+            "node": "Back Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Back Doc": {
+      "main": [
+        [
+          {
+            "node": "to luigi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signature": {
+      "main": [
+        [
+          {
+            "node": "upload signature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy file": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "add signature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "add signature": {
+      "main": [
+        [
+          {
+            "node": "Front Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upload signature": {
+      "main": [
+        [
+          {
+            "node": "Copy file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "to luigi": {
+      "main": [
+        [
+          {
+            "node": "to client",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Signature",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Signature1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "to client": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Front Doc1": {
+      "main": [
+        [
+          {
+            "node": "to luigi1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signature1": {
+      "main": [
+        [
+          {
+            "node": "upload signature1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy file1": {
+      "main": [
+        [
+          {
+            "node": "Update a document1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document1": {
+      "main": [
+        [
+          {
+            "node": "add signature1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "add signature1": {
+      "main": [
+        [
+          {
+            "node": "Front Doc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upload signature1": {
+      "main": [
+        [
+          {
+            "node": "Copy file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "to luigi1": {
+      "main": [
+        [
+          {
+            "node": "to client1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "to client1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Europe/London",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "YOUR_ERROR_WORKFLOW_ID"
+  },
+  "versionId": "e7852f76-b4b2-43fa-8ba7-f79ca76ad488",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID"
+  },
+  "id": "YOUR_WORKFLOW_ID",
+  "tags": [
+    {
+      "updatedAt": "2026-06-22T13:04:00.860Z",
+      "createdAt": "2026-06-22T13:04:00.860Z",
+      "id": "Cixwt3LO4QmPynKL",
+      "name": "SunCoast"
+    }
+  ]
+}
